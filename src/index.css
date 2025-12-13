@@ -1,0 +1,106 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-manrope: "Manrope", sans-serif;
+  --font-dm-sans: "DM Sans", sans-serif;
+  --font-playfair: "Playfair Display", serif;
+  --font-poppins: "Poppins", sans-serif;
+
+  --color-primary: #fafafa;
+  --color-accent: #309f6d;
+  --color-secondary: #010101;
+}
+/* custom-phone-input.css */
+
+/* ---------- SHARED STYLES ---------- */
+.react-international-phone-input-container {
+  border-radius: 0.25rem;
+  border-width: 1px;
+  transition: all 0.2s ease-in-out;
+  width: 100%;
+}
+
+.react-international-phone-input-container input {
+  border: none !important;
+  outline: none !important;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  border-radius: 0.25rem !important;
+}
+
+/* ---------- LIGHT MODE ---------- */
+.react-international-phone-input-container {
+  background-color: #ffffff !important; /* white */
+  color: #1f2937 !important; /* gray-800 */
+  border: 1px solid #d1d5db !important; /*gray-300*/
+}
+
+.react-international-phone-input-container input::placeholder {
+  color: #6b7280 !important; /* gray-500 */
+}
+
+.react-international-phone-country-selector-button {
+  background-color: transparent !important;
+  color: #1f2937 !important; /* gray-800 */
+  border-right: 1px solid #d1d5db !important;
+  border-left: none !important;
+  border-top: none !important;
+  border-bottom: none !important;
+}
+
+.react-international-phone-country-selector-dropdown {
+  background-color: #ffffff !important;
+  color: #1f2937 !important;
+  border: 1px solid #d1d5db !important;
+}
+
+.react-international-phone-country-selector-dropdown__list-item {
+  color: #1f2937 !important;
+}
+
+.react-international-phone-country-selector-dropdown__list-item--focused {
+  background-color: #f3f4f6 !important; /* gray-100 */
+}
+
+/* ---------- DARK MODE ---------- */
+.dark .react-international-phone-input-container {
+  background-color: #111827 !important; /* gray-900 */
+  color: #f3f4f6 !important; /* gray-100 */
+  border: 1px solid #374151 !important; /* gray-700 */
+}
+
+.dark .react-international-phone-input-container input {
+  background-color: #111827 !important;
+  color: #f3f4f6 !important;
+  border: none !important;
+}
+
+.dark .react-international-phone-input-container input::placeholder {
+  color: #9ca3af !important; /* gray-400 */
+}
+
+.dark .react-international-phone-country-selector-button {
+  background-color: transparent !important;
+  color: #f3f4f6 !important;
+  border-right: 1px solid #374151 !important;
+  border-left: none !important;
+  border-top: none !important;
+  border-bottom: none !important;
+}
+
+.dark .react-international-phone-country-selector-dropdown {
+  background-color: #1f2937 !important; /* gray-800 */
+  color: #f3f4f6 !important;
+  border: 1px solid #374151 !important;
+}
+
+.dark .react-international-phone-country-selector-dropdown__list-item {
+  color: #f3f4f6 !important;
+}
+
+.dark .react-international-phone-country-selector-dropdown__list-item--focused {
+  background-color: #374151 !important;
+}
