@@ -9,6 +9,9 @@ import Notification from "@/components/ui/Notification";
 import API from "@/services/index";
 
 const initialForm = {
+  // ✅ NEW: Token Number (manual)
+  token_number: "",
+
   // 1) Household Information
   name: "",
   contact_number: "",
@@ -208,6 +211,9 @@ const CollectPage = () => {
     const living_temporary_shelter = form.living_status === "SHELTER";
 
     return {
+      // ✅ NEW
+      token_number: form.token_number?.trim() || null,
+
       // 1
       name: form.name.trim(),
       contact_number: form.contact_number.trim(),
@@ -353,6 +359,14 @@ const CollectPage = () => {
               {/* 1 */}
               <SectionCard title="1. Household Information" icon="mdi:account">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* ✅ NEW field (manual token) */}
+                  <TextInput
+                    label="Token Number"
+                    placeholder="Enter token number"
+                    value={form.token_number}
+                    onChange={(e) => setField("token_number", e.target.value)}
+                  />
+
                   <TextInput
                     label="Name"
                     placeholder="Full name"
@@ -847,6 +861,10 @@ const CollectPage = () => {
             <div className="rounded-md border border-gray-200 dark:border-gray-800 p-4">
               <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">Household</p>
               <div className="mt-2 grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-gray-700 dark:text-gray-200">
+                {/* ✅ NEW: token shown only (no other changes) */}
+                <div>
+                  <span className="text-gray-500 dark:text-gray-400">Token:</span> {form.token_number || "-"}
+                </div>
                 <div>
                   <span className="text-gray-500 dark:text-gray-400">Name:</span> {form.name || "-"}
                 </div>

@@ -190,12 +190,16 @@ const TodayPage = () => {
       const priority2 = String(r.priority_2 || "").toLowerCase();
       const priority3 = String(r.priority_3 || "").toLowerCase();
 
+      // ✅ CHANGE: allow searching by token too
+      const token = String(r.token_number || "").toLowerCase();
+
       return (
         name.includes(q) ||
         contact.includes(q) ||
         priority1.includes(q) ||
         priority2.includes(q) ||
-        priority3.includes(q)
+        priority3.includes(q) ||
+        token.includes(q)
       );
     });
   }, [rows, search]);
@@ -333,6 +337,10 @@ const TodayPage = () => {
                     <thead className="bg-white/60 dark:bg-gray-900/50">
                       <tr className="text-left text-gray-700 dark:text-gray-200">
                         <th className="px-4 py-3 whitespace-nowrap">Time</th>
+
+                        {/* ✅ NEW column */}
+                        <th className="px-4 py-3 whitespace-nowrap">Token</th>
+
                         <th className="px-4 py-3 whitespace-nowrap">Name</th>
                         <th className="px-4 py-3 whitespace-nowrap">Contact</th>
                         <th className="px-4 py-3 whitespace-nowrap">Living</th>
@@ -379,6 +387,12 @@ const TodayPage = () => {
                             <td className="px-4 py-3 whitespace-nowrap text-gray-700/80 dark:text-gray-200/80">
                               {fmtDateTime(r.collected_at)}
                             </td>
+
+                            {/* ✅ NEW cell */}
+                            <td className="px-4 py-3 whitespace-nowrap text-gray-800 dark:text-gray-200">
+                              {r.token_number || "-"}
+                            </td>
+
                             <td className="px-4 py-3 whitespace-nowrap font-medium text-gray-900 dark:text-gray-100">
                               {r.name}
                             </td>
@@ -444,6 +458,12 @@ const TodayPage = () => {
           {!selectedRow ? null : (
             <div className="space-y-4 text-sm">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {/* ✅ NEW: token in modal (minimal) */}
+                <div className="rounded-lg border border-gray-200 dark:border-gray-800 bg-teal-50/60 dark:bg-teal-950/20 p-3">
+                  <p className="text-xs text-gray-600 dark:text-gray-300">Token</p>
+                  <p className="text-gray-900 dark:text-gray-100 font-medium">{selectedRow.token_number || "-"}</p>
+                </div>
+
                 <div className="rounded-lg border border-gray-200 dark:border-gray-800 bg-emerald-50/60 dark:bg-emerald-950/20 p-3">
                   <p className="text-xs text-gray-600 dark:text-gray-300">Name</p>
                   <p className="text-gray-900 dark:text-gray-100 font-medium">{selectedRow.name}</p>
