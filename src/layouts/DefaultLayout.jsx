@@ -47,36 +47,22 @@ const DefaultLayout = ({ children }) => {
             </div>
 
             {/* LOGGED-IN NAVIGATION */}
-            {isLoggedIn && (
-              <nav className="flex items-center gap-6 text-sm mt-2 sm:mt-0">
-                <NavLink
-                  to="/"
-                  className={({ isActive }) => (isActive ? "text-accent font-semibold" : "hover:text-accent")}
-                >
-                  Dashboard
-                </NavLink>
 
-                {/* <NavLink
-                  to="/member/donations"
-                  className={({ isActive }) => (isActive ? "text-accent font-semibold" : "hover:text-accent")}
-                >
-                  Donations
-                </NavLink> */}
+            <nav className="flex items-center gap-6 text-sm mt-2 sm:mt-0">
+              <NavLink
+                to="/dashboard"
+                className={({ isActive }) => (isActive ? "text-accent font-semibold" : "hover:text-accent")}
+              >
+                Dashboard
+              </NavLink>
 
-                <NavLink
-                  to="/member/donation/new"
-                  className={({ isActive }) => (isActive ? "text-accent font-semibold" : "hover:text-accent")}
-                >
-                  New Donation
-                </NavLink>
-                <NavLink
-                  to="/member/upload"
-                  className={({ isActive }) => (isActive ? "text-accent font-semibold" : "hover:text-accent")}
-                >
-                  Upload
-                </NavLink>
-              </nav>
-            )}
+              <NavLink
+                to="/collect"
+                className={({ isActive }) => (isActive ? "text-accent font-semibold" : "hover:text-accent")}
+              >
+                New Collection
+              </NavLink>
+            </nav>
           </div>
 
           {/* RIGHT SECTION — ONLY SHOW IF LOGGED IN */}
