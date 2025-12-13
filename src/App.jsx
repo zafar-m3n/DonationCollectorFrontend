@@ -12,11 +12,11 @@ function App() {
       <Router>
         <Routes>
           {/* Default route */}
-          <Route path="/" element={<Navigate to="/collect" replace />} />
+          <Route path="/" element={<Navigate to="/dashboard" replace />} />
 
           {/* Main pages */}
           <Route path="/collect" element={<CollectPage />} />
-          <Route path="/today" element={<TodayPage />} />
+          <Route path="/dashboard" element={<TodayPage />} />
 
           {/* Fallback */}
           <Route path="*" element={<Navigate to="/collect" replace />} />
