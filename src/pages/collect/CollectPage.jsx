@@ -329,7 +329,7 @@ const CollectPage = () => {
 
             <div className="flex flex-wrap gap-2">
               <button
-                onClick={() => navigate("/today")}
+                onClick={() => navigate("/dashboard")}
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-md border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-gray-200 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 transition"
               >
                 <Icon icon="mdi:chart-box" width={18} />

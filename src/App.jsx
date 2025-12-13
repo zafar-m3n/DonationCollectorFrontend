@@ -19,7 +19,7 @@ function App() {
           <Route path="/dashboard" element={<TodayPage />} />
 
           {/* Fallback */}
-          <Route path="*" element={<Navigate to="/collect" replace />} />
+          <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
       </Router>
 
