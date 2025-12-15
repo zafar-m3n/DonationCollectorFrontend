@@ -330,7 +330,7 @@ const TodayPage = () => {
           </div>
 
           {/* ✅ REPLACEMENT: Download section (replaces Today Entries table section) */}
-          <div className="mt-5">
+          {/* <div className="mt-5">
             <SectionCard
               title="Download Collected Information"
               icon="mdi:file-excel"
@@ -356,85 +356,8 @@ const TodayPage = () => {
                 </button>
               </div>
             </SectionCard>
-          </div>
+          </div> */}
         </div>
-
-        {/* View Modal (unchanged, but will never open now because table is removed) */}
-        <Modal
-          isOpen={!!selectedRow}
-          onClose={() => setSelectedRow(null)}
-          title="Household Assessment Details"
-          size="xl"
-          centered={true}
-          footer={
-            <div className="flex justify-end">
-              <button
-                onClick={() => setSelectedRow(null)}
-                className="px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-800 text-gray-800 dark:text-gray-200 bg-white/70 dark:bg-gray-900/60 hover:bg-white dark:hover:bg-gray-900 transition"
-              >
-                Close
-              </button>
-            </div>
-          }
-        >
-          {!selectedRow ? null : (
-            <div className="space-y-4 text-sm">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <div className="rounded-lg border border-gray-200 dark:border-gray-800 bg-teal-50/60 dark:bg-teal-950/20 p-3">
-                  <p className="text-xs text-gray-600 dark:text-gray-300">Token</p>
-                  <p className="text-gray-900 dark:text-gray-100 font-medium">{selectedRow.token_number || "-"}</p>
-                </div>
-
-                <div className="rounded-lg border border-gray-200 dark:border-gray-800 bg-emerald-50/60 dark:bg-emerald-950/20 p-3">
-                  <p className="text-xs text-gray-600 dark:text-gray-300">Name</p>
-                  <p className="text-gray-900 dark:text-gray-100 font-medium">{selectedRow.name}</p>
-                </div>
-                <div className="rounded-lg border border-gray-200 dark:border-gray-800 bg-sky-50/60 dark:bg-sky-950/20 p-3">
-                  <p className="text-xs text-gray-600 dark:text-gray-300">Contact</p>
-                  <p className="text-gray-900 dark:text-gray-100 font-medium">{selectedRow.contact_number}</p>
-                </div>
-                <div className="rounded-lg border border-gray-200 dark:border-gray-800 bg-violet-50/60 dark:bg-violet-950/20 p-3">
-                  <p className="text-xs text-gray-600 dark:text-gray-300">Family members</p>
-                  <p className="text-gray-900 dark:text-gray-100 font-medium">{selectedRow.family_members}</p>
-                </div>
-                <div className="rounded-lg border border-gray-200 dark:border-gray-800 bg-amber-50/60 dark:bg-amber-950/20 p-3">
-                  <p className="text-xs text-gray-600 dark:text-gray-300">Collected at</p>
-                  <p className="text-gray-900 dark:text-gray-100 font-medium">
-                    {fmtDateTime(selectedRow.collected_at)}
-                  </p>
-                </div>
-              </div>
-
-              <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white/70 dark:bg-gray-900/60 p-4">
-                <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">Priorities</p>
-                <ul className="list-disc pl-5 space-y-1 text-gray-800 dark:text-gray-200">
-                  <li>{selectedRow.priority_1 || "-"}</li>
-                  <li>{selectedRow.priority_2 || "-"}</li>
-                  <li>{selectedRow.priority_3 || "-"}</li>
-                </ul>
-              </div>
-
-              {selectedRow.notes ? (
-                <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-rose-50/40 dark:bg-rose-950/20 p-4">
-                  <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">Notes</p>
-                  <p className="text-gray-800 dark:text-gray-200">{selectedRow.notes}</p>
-                </div>
-              ) : null}
-
-              <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white/70 dark:bg-gray-900/60 p-4">
-                <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">Key Indicators</p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-gray-800 dark:text-gray-200">
-                  <div>Structural damage: {selectedRow.house_structurally_damaged ? "Yes" : "No"}</div>
-                  <div>Furniture lost: {selectedRow.furniture_lost ? "Yes" : "No"}</div>
-                  <div>Enough daily food: {selectedRow.enough_daily_food || "-"}</div>
-                  <div>Clean drinking water: {selectedRow.clean_drinking_water_available ? "Yes" : "No"}</div>
-                  <div>No support yet: {selectedRow.support_none ? "Yes" : "No"}</div>
-                  <div>Unable to work: {selectedRow.unable_to_work_currently ? "Yes" : "No"}</div>
-                </div>
-              </div>
-            </div>
-          )}
-        </Modal>
       </div>
     </DefaultLayout>
   );
