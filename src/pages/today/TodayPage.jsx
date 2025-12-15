@@ -137,6 +137,9 @@ const TodayPage = () => {
   const [search, setSearch] = useState("");
   const [selectedRow, setSelectedRow] = useState(null);
 
+  // ✅ NEW: download loading state
+  const [downloading, setDownloading] = useState(false);
+
   const fetchAll = async () => {
     setLoading(true);
     try {
@@ -189,8 +192,6 @@ const TodayPage = () => {
       const priority1 = String(r.priority_1 || "").toLowerCase();
       const priority2 = String(r.priority_2 || "").toLowerCase();
       const priority3 = String(r.priority_3 || "").toLowerCase();
-
-      // ✅ CHANGE: allow searching by token too
       const token = String(r.token_number || "").toLowerCase();
 
       return (
@@ -220,6 +221,32 @@ const TodayPage = () => {
       { label: "Unable to work", value: cards.unable_to_work ?? 0, icon: "mdi:briefcase-remove" },
     ];
   }, [cards]);
+
+  // ✅ NEW: download handler (calls your API and saves the file)
+  const handleDownloadExcel = async () => {
+    try {
+      setDownloading(true);
+      const res = await API.private.exportTodayAssessmentsExcel(); // blob response
+
+      const blob = new Blob([res.data], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "household_assessments_2025-12-13.xlsx";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error(err);
+      Notification.error("Failed to download Excel file.");
+    } finally {
+      setDownloading(false);
+    }
+  };
 
   // Small pastel header strip
   const headerTint =
@@ -302,140 +329,37 @@ const TodayPage = () => {
             </SectionCard>
           </div>
 
-          {/* Table */}
+          {/* ✅ REPLACEMENT: Download section (replaces Today Entries table section) */}
           <div className="mt-5">
             <SectionCard
-              title="Today Entries"
-              icon="mdi:table"
+              title="Download Collected Information"
+              icon="mdi:file-excel"
               tint="bg-violet-50/40 dark:bg-violet-950/20"
-              right={
-                <div className="flex items-center gap-2">
-                  <div className="relative">
-                    <input
-                      value={search}
-                      onChange={(e) => setSearch(e.target.value)}
-                      placeholder="Search name / phone / priority..."
-                      className="w-65 bg-white/80 dark:bg-gray-900/70 border border-gray-200 dark:border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-800 dark:text-gray-200 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:border-emerald-500 transition"
-                    />
-                    <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400">
-                      <Icon icon="mdi:magnify" width={18} />
-                    </div>
-                  </div>
-                  <div className="text-xs text-gray-700/80 dark:text-gray-300/80">
-                    {filteredRows.length} / {rows.length}
-                  </div>
-                </div>
-              }
             >
-              {loading ? (
-                <p className="text-sm text-gray-700/80 dark:text-gray-300/80">Loading...</p>
-              ) : filteredRows.length === 0 ? (
-                <p className="text-sm text-gray-700/80 dark:text-gray-300/80">No entries found for today.</p>
-              ) : (
-                <div className="overflow-auto border border-gray-200 dark:border-gray-800 rounded-xl bg-white/70 dark:bg-gray-900/60">
-                  {/* <table className="min-w-full text-sm">
-                    <thead className="bg-white/60 dark:bg-gray-900/50">
-                      <tr className="text-left text-gray-700 dark:text-gray-200">
-                        <th className="px-4 py-3 whitespace-nowrap">Time</th>
-
-                        <th className="px-4 py-3 whitespace-nowrap">Token</th>
-
-                        <th className="px-4 py-3 whitespace-nowrap">Name</th>
-                        <th className="px-4 py-3 whitespace-nowrap">Contact</th>
-                        <th className="px-4 py-3 whitespace-nowrap">Living</th>
-                        <th className="px-4 py-3 whitespace-nowrap">Top Priority</th>
-                        <th className="px-4 py-3 whitespace-nowrap">Flags</th>
-                        <th className="px-4 py-3 whitespace-nowrap"></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {filteredRows.map((r) => {
-                        const living = r.living_temporary_shelter
-                          ? "Shelter"
-                          : r.living_relatives_home
-                          ? "Relative"
-                          : "Own";
-
-                        const flags = [];
-                        if (r.house_structurally_damaged) flags.push({ text: "Damage", tone: "rose" });
-                        if (r.enough_daily_food === "NO") flags.push({ text: "No food", tone: "amber" });
-                        if (r.need_water) flags.push({ text: "Water", tone: "teal" });
-                        if (r.need_sanitation) flags.push({ text: "Sanitation", tone: "violet" });
-                        if (r.need_medicine) flags.push({ text: "Medicine", tone: "sky" });
-                        if (r.support_none) flags.push({ text: "No support", tone: "emerald" });
-
-                        const chipTone = (tone) => {
-                          if (tone === "rose")
-                            return "bg-rose-50 border-rose-200 text-rose-900 dark:bg-rose-950/30 dark:border-rose-900/40 dark:text-rose-100";
-                          if (tone === "amber")
-                            return "bg-amber-50 border-amber-200 text-amber-900 dark:bg-amber-950/30 dark:border-amber-900/40 dark:text-amber-100";
-                          if (tone === "teal")
-                            return "bg-teal-50 border-teal-200 text-teal-900 dark:bg-teal-950/30 dark:border-teal-900/40 dark:text-teal-100";
-                          if (tone === "violet")
-                            return "bg-violet-50 border-violet-200 text-violet-900 dark:bg-violet-950/30 dark:border-violet-900/40 dark:text-violet-100";
-                          if (tone === "sky")
-                            return "bg-sky-50 border-sky-200 text-sky-900 dark:bg-sky-950/30 dark:border-sky-900/40 dark:text-sky-100";
-                          return "bg-emerald-50 border-emerald-200 text-emerald-900 dark:bg-emerald-950/30 dark:border-emerald-900/40 dark:text-emerald-100";
-                        };
-
-                        return (
-                          <tr
-                            key={r.id}
-                            className="border-t border-gray-200 dark:border-gray-800 text-gray-800 dark:text-gray-200"
-                          >
-                            <td className="px-4 py-3 whitespace-nowrap text-gray-700/80 dark:text-gray-200/80">
-                              {fmtDateTime(r.collected_at)}
-                            </td>
-
-                            <td className="px-4 py-3 whitespace-nowrap text-gray-800 dark:text-gray-200">
-                              {r.token_number || "-"}
-                            </td>
-
-                            <td className="px-4 py-3 whitespace-nowrap font-medium text-gray-900 dark:text-gray-100">
-                              {r.name}
-                            </td>
-                            <td className="px-4 py-3 whitespace-nowrap text-gray-800 dark:text-gray-200">
-                              {r.contact_number}
-                            </td>
-                            <td className="px-4 py-3 whitespace-nowrap">{living}</td>
-                            <td className="px-4 py-3 whitespace-nowrap">{r.priority_1 || "-"}</td>
-                            <td className="px-4 py-3">
-                              <div className="flex flex-wrap gap-2">
-                                {flags.length === 0 ? (
-                                  <span className="text-xs text-gray-600/70 dark:text-gray-300/70">—</span>
-                                ) : (
-                                  flags.slice(0, 5).map((f) => (
-                                    <span
-                                      key={f.text}
-                                      className={`text-xs px-2 py-1 rounded-full border ${chipTone(f.tone)}`}
-                                    >
-                                      {f.text}
-                                    </span>
-                                  ))
-                                )}
-                              </div>
-                            </td>
-                            <td className="px-4 py-3 whitespace-nowrap text-right">
-                              <button
-                                onClick={() => setSelectedRow(r)}
-                                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-800 bg-white/70 dark:bg-gray-900/60 hover:bg-white dark:hover:bg-gray-900 transition text-sm"
-                              >
-                                <Icon icon="mdi:eye" width={18} />
-                                View
-                              </button>
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table> */}
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <div>
+                  <p className="text-sm text-gray-700/80 dark:text-gray-200/80">
+                    Download all household assessments for <span className="font-semibold">13th December 2025</span> as
+                    an Excel file.
+                  </p>
                 </div>
-              )}
+
+                <button
+                  onClick={handleDownloadExcel}
+                  disabled={downloading}
+                  className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-800 text-gray-800 dark:text-gray-200 bg-white/70 dark:bg-gray-900/60 hover:bg-white dark:hover:bg-gray-900 transition ${
+                    downloading ? "opacity-70 cursor-not-allowed" : ""
+                  }`}
+                >
+                  <Icon icon="mdi:download" width={18} />
+                  {downloading ? "Preparing..." : "Download Excel"}
+                </button>
+              </div>
             </SectionCard>
           </div>
         </div>
 
-        {/* View Modal */}
+        {/* View Modal (unchanged, but will never open now because table is removed) */}
         <Modal
           isOpen={!!selectedRow}
           onClose={() => setSelectedRow(null)}
@@ -456,7 +380,6 @@ const TodayPage = () => {
           {!selectedRow ? null : (
             <div className="space-y-4 text-sm">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                {/* ✅ NEW: token in modal (minimal) */}
                 <div className="rounded-lg border border-gray-200 dark:border-gray-800 bg-teal-50/60 dark:bg-teal-950/20 p-3">
                   <p className="text-xs text-gray-600 dark:text-gray-300">Token</p>
                   <p className="text-gray-900 dark:text-gray-100 font-medium">{selectedRow.token_number || "-"}</p>

@@ -40,10 +40,24 @@ const getTodayAssessmentStats = async () => {
 /* Export API                 */
 /* ========================== */
 
+/**
+ * Export today's assessments (fixed-date) as an Excel file
+ * GET /api/assessments/today/export
+ *
+ * NOTE: This returns a binary file (xlsx), so we request it as a blob.
+ */
+const exportTodayAssessmentsExcel = async () => {
+  return await instance.apiClient.get("/api/assessments/today/export", {
+    headers: instance.publicHeaders(),
+    responseType: "blob",
+  });
+};
+
 const privateAPI = {
   createAssessment,
   getTodayAssessments,
   getTodayAssessmentStats,
+  exportTodayAssessmentsExcel, // ✅ NEW
 };
 
 export default privateAPI;
